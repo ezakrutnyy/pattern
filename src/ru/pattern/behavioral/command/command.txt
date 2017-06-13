@@ -1,0 +1,44 @@
+Шаблон: Команда (Command)
+========================================================================================================================
+Цель:
+
+Инкапсулирование запроса в объект.
+========================================================================================================================
+Для чего используется:
+
+Чтобы задать параметры клиентов для обработки определенных запросов, создание очереди из этих запросов или их контроля
+и поддержки отмены операции
+========================================================================================================================
+Пример использования:
+
+- параметризация объектов выполняемым действием;
+- определить запрос, ставить его в очередь или выполнять его в разное время.
+========================================================================================================================
+
+Конкретные реализации:
+
+Команда (Command) - содержит методы, которые вызывают метод из объекта другого типа,
+функционал которого  был скрыт реализацией command-метода во время его разработки
+- Все реализации  java.lang.Runnable
+- Все реализации  javax.swing.Action
+========================================================================================================================
+
+Command pattern
+
+Command pattern is a data driven design pattern and falls under behavioral pattern category.
+A request is wrapped under an object as command and passed to invoker object.
+Invoker object looks for the appropriate object which can handle this command and passes the command to the corresponding
+object which executes the command.
+
+Advantage of command pattern
+
+1) It separates the object that invokes the operation from the object that actually performs the operation.
+2) It makes easy to add new commands, because existing classes remain unchanged.
+
+Usage of command pattern:
+
+It is used:
+
+1) When you need parameterize objects according to an action perform.
+2) When you need to create and execute requests at different times.
+3) When you need to support rollback, logging or transaction functionality.

@@ -1,0 +1,60 @@
+Шаблон: Компоновщик (Composite)
+========================================================================================================================
+Цель:
+
+Скомпонировать объекты в структуры по типу "дерева", позволяет клиентам единообразно трактоватьотдельные
+и составные объекты.
+========================================================================================================================
+Для чего используется:
+
+Для группировки мелких компонентов в более крупные, которые, в свою очередь, могут стать основой для еще более
+крупных структур.
+========================================================================================================================
+
+Пример использования:
+
+- для представления иерархии часть-целое;
+- мы хотим, чтобы клиенты одним способом трактовали как отдельные объекты, так и составные.
+
+========================================================================================================================
+
+Конкретные реализации:
+Компоновщик (Composite) - имеет методы, которые принимают в качестве параметра экземпляры одного и того же типа,
+объединяющий объекты в древовидную структуру для представления иерархии от частного к целому
+
+- java.awt.Container#add(Component)
+- javax.faces.component.UIComponent#getChildren()
+========================================================================================================================
+Composite
+
+Composite pattern is used where we need to treat a group of objects in similar way as a single object.
+Composite pattern composes objects in term of a tree structure to represent part as well as whole hierarchy.
+This type of design pattern comes under structural pattern as this pattern creates a tree structure of group of objects.
+This pattern creates a class that contains group of its own objects.
+This class provides ways to modify its group of same objects.
+
+
+Real life example usage of composite design pattern may be:
+
+- building consolidate view of a customer’s account in bank (i.e. customer’s portfolio);
+- building general ledgers;
+- computer/network monitoring applications;
+- retail and inventory applications;
+- directory structure in file system implementations;
+- menu items in GUI screens.
+
+
+Advantage of Composite Design Pattern
+
+1) It defines class hierarchies that contain primitive and complex objects.
+2) It makes easier to you to add new kinds of components.
+3) It provides flexibility of structure with manageable class or interface.
+
+Usage of Composite Pattern
+
+1) When you want to represent a full or partial hierarchy of objects.
+2) When the responsibilities are needed to be added dynamically to the individual objects
+without affecting other objects. Where the responsibility of object may vary from time to time.
+
+
+

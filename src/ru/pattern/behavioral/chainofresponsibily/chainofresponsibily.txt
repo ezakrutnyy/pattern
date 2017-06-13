@@ -1,0 +1,46 @@
+Шаблон: Цепочка ответственности (Chain of Responcibility)
+========================================================================================================================
+Цель:
+
+Связывание объектов получателей в цепочку и передача запроса по ней.
+========================================================================================================================
+Для чего используется:
+
+Помогает избежать привязки отправителя запроса к его получателю, что дает возможность обработать данный запрос
+нескольким объектам.
+========================================================================================================================
+Пример использования:
+
+- ослабление привязанности (объект не должен знать, кто именно обработает его запрос);
+- дополнительная гибкость при распределении обязанностей между объектами.
+========================================================================================================================
+
+Конкретные реализации:
+
+Цепочка ответственности (Chain of responsibility)  - содержит методы, которые вызывают один и тот же метод
+в каждом экземпляре определенного класса в очереди
+- java.util.logging.Logger#log()
+- javax.servlet.Filter#doFilter()
+========================================================================================================================
+
+Chain Of Responsibility Pattern
+
+As the name suggests, the chain of responsibility pattern creates a chain of receiver objects for a request.
+This pattern decouples sender and receiver of a request based on type of request.
+This pattern comes under behavioral patterns.
+In this pattern, normally each receiver contains reference to another receiver.
+If one object cannot handle the request then it passes the same to the next receiver and so on.
+
+Advantage of Chain of Responsibility Pattern
+
+1) It reduces the coupling.
+2) It adds flexibility while assigning the responsibilities to objects.
+3) It allows a set of classes to act as one; events produced in one class can be sent to other handler classes
+with the help of composition.
+
+Usage of Chain of Responsibility Pattern:
+
+It is used:
+
+1) When more than one object can handle a request and the handler is unknown.
+2) When the group of objects that can handle the request must be specified in dynamic way.

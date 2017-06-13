@@ -1,0 +1,42 @@
+Шаблон: Приспособленец (Flyweight)
+========================================================================================================================
+Цель:
+
+Поддержка множества мелких объектов.
+========================================================================================================================
+Для чего используется:
+
+Использует разделение для того, чтобы поддерживать много мелких объектов.
+========================================================================================================================
+
+Пример использования:
+
+- когда используется большое число объектов;
+- большую часть состояния объектов можно вынести наружу;
+- приложение не зависит от идентичности объекта.
+========================================================================================================================
+
+Конкретные реализации:
+Приспособленец (Flyweight) - содержит методы, которые возвращают закешированный экземпляр.
+То есть объект, который ведет себя как уникальный экземпляр в разных местах программы, по факту не является таковым.
+- java.lang.Integer#valueOf(int) (это же касается Boolean, Byte, Character, Short and Long)
+========================================================================================================================
+Flyweight
+
+Flyweight pattern is primarily used to reduce the number of objects created and to decrease memory footprint and
+increase performance.
+This type of design pattern comes under structural pattern as this pattern provides ways to decrease object count
+thus improving the object structure of application.
+Flyweight pattern tries to reuse already existing similar kind objects by storing them and creates new object
+when no matching object is found.
+
+Advantage of Flyweight Pattern
+
+1) It reduces the number of objects.
+2) It reduces the amount of memory and storage devices required if the objects are persisted
+
+Usage of Flyweight Pattern
+
+1) When an application uses number of objects
+2) When the storage cost is high because of the quantity of objects.
+3) When the application does not depend on object identity.

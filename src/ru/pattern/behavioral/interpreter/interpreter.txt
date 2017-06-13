@@ -1,0 +1,34 @@
+Шаблон: Интерпретатор (Interpreter)
+========================================================================================================================
+Для чего используется:
+
+- Для заданного языка определяет представление его грамматики, а также интерпретатор предложений этого языка.
+- Отображает проблемную область в язык, язык – в грамматику, а грамматику – в иерархии объектно-ориентированного
+проектирования.
+
+========================================================================================================================
+Конкретные реализации:
+
+Интерпретатор (Interpreter) - содержит методы, которые возвращают разные по структуре экземпляры
+основываясь на переданном экземпляре; обратите внимание, что парсинг и форматирование не является частью шаблона
+- java.util.Pattern
+- java.text.Normalizer
+- наследники  java.text.Format
+- наследники  javax.el.ELResolver
+========================================================================================================================
+
+Interpreter pattern:
+
+Interpreter pattern provides a way to evaluate language grammar or expression.
+This type of pattern comes under behavioral pattern. This pattern involves implementing an expression interface
+which tells to interpret a particular context. This pattern is used in SQL parsing, symbol processing engine etc.
+
+Advantage of Interpreter Pattern
+
+It is easier to change and extend the grammar.
+Implementing the grammar is straightforward.
+
+Usage of Interpreter pattern:
+
+1) When the grammar of the language is not complicated.
+                                         2) When the efficiency is not a priority.

@@ -1,0 +1,40 @@
+Шаблон: Фасад (Facade)
+========================================================================================================================
+Цель:
+
+Предоставить унифицированный интерфейс вместо нескольких интерфейсов подсистемы.
+========================================================================================================================
+Для чего используется:
+
+Используется для определения интерфейса высокого уровня, который упрощает использование подсистемы.
+========================================================================================================================
+
+Пример использования:
+
+- изолирование клиентов от компонентов подсистемы, упрошая работу с ней;
+- необходимость ослабления связанности подсистемы с клиентами.
+========================================================================================================================
+
+Конкретные реализации:
+Фасад (Facade) - содержит методы, которые внутренне используют экземпляры разных независимых типов
+(классов или реализации интерфейсов)
+- javax.faces.context.FacesContext, внутренне использует LifeCycle, ViewHandler, NavigationHandler
+и много других не заставляя пользователя заботиться об этом.
+- javax.faces.context.ExternalContext, использует ServletContext, HttpSession, HttpServletRequest, HttpServletResponse, и др.
+========================================================================================================================
+Facade
+
+Facade pattern hides the complexities of the system and provides an interface to the client using which the client
+can access the system. This type of design pattern comes under structural pattern as this pattern
+adds an interface to existing system to hide its complexities.
+
+This pattern involves a single class which provides simplified methods required by client
+and delegates calls to methods of existing system classes.
+
+Advantage of Facade Pattern:
+1) It shields the clients from the complexities of the sub-system components.
+2) It promotes loose coupling between subsystems and its clients.
+
+It is used:
+When you want to provide simple interface to a complex sub-system.
+When several dependencies exist between clients and the implementation classes of an abstraction.

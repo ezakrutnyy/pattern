@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)https://refactoring.guru/ru/design-patterns/memento -->
+<html lang="ru" class="wf-ptsans-n4-active wf-ptsans-n7-active wf-active"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Снимок</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <meta name="description" content="Позволяет сохранять вне объекта снимок его состояния, не нарушая инкапсуляции. Позже, используя этот снимок можно восстановить прошлое состояние объекта.">
+
+    <link rel="canonical" href="https://refactoring.guru/ru/design-patterns/memento">
+
+    <link rel="shortcut icon" href="https://refactoring.guru/favicon.ico">
+
+    <meta property="fb:app_id" content="666819623386327">
+<meta property="og:type" content="website">
+
+<script type="text/javascript" async="" src="./Снимок_files/widget-1.4.gz.js.Без названия"></script><script type="text/javascript" async="" src="./Снимок_files/ec.js.Без названия"></script><script src="./Снимок_files/webfont.js.Без названия" type="text/javascript" async=""></script><script type="text/javascript">
+    WebFontConfig = {
+        google: { families: [ 'PT+Sans:400,700:latin' ] }
+    };
+    (function() {
+        var wf = document.createElement('script');
+        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+        wf.type = 'text/javascript';
+        wf.async = 'true';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(wf, s);
+    })(); </script>
+    <link rel="stylesheet" type="text/css" href="./font-awesome-4.7.0/css/font-awesome.min.css">
+<link href="./Снимок_files/public.min-ca316d8b9a.css" rel="stylesheet"><link rel="stylesheet" href="./Снимок_files/css" media="all">
+</head>
+<body class="memento" data-body_class="memento" style="margin-bottom: 130px;"><span><span style="display:none;">fix</span><style type="text/css">    #ue-dlg {      z-index: 100003;      display: block;      text-align: left;      margin: -2em auto 0 auto;      position: absolute;       background-color: transparent;      border:0;      }        #ue-dlg-content {      border:0;      background:0;      display: none;    }    #ue-loading-indicator {      background-color:white;      border: 7px solid #BBB;      border: 7px solid rgba(150, 150, 150, 0.38);      -moz-border-radius: 15px;      -webkit-border-radius: 15px;      border-radius: 15px;      -webkit-box-shadow: 0 10px 50px rgba(0, 0, 0, .35);      -moz-box-shadow: 0 10px 50px rgba(0,0,0,.35);      box-shadow: 0 10px 50px rgba(0, 0, 0, .35);      padding: 10px;      margin-left: 330px;      margin-top: 250px;    }        #ue-overlay {      position: absolute;      z-index:100002;      width: 100%;      height: 100%;      left: 0;      top: 0;      background-color: #000;      filter: alpha(opacity=10);      -ms-filter:'progid:DXImageTransform.Microsoft.Alpha(Opacity=10)';      opacity: .1;    }        #ue-dlg[id],    #ue-overlay[id] {     position:fixed;    }        #ue-overlay p {      padding: 5px;      color: #ddd;      font: bold 14px arial, sans-serif;      margin: 0;      letter-spacing: -1px;    }        * html.dlg-open body {      height: 100%;    }        * html.dlg-open,    * html.dlg-open body {      overflow: hidden;    }        html.dlg-open object,    html.dlg-open embed,    * html.dlg-open select {      visibility: hidden;    }        * html #ue-overlay {      width: 110%;    }        * html #ue-dlg #ue-dlg-close {      background: none;    }</style></span><span><span style="display:none;">fix</span><style type="text/css">    .ue-tab-container {z-index: 100001 !important;position: fixed;right: 0px;top:35%;}        .ue-button {      border: 1px solid #fff;       box-shadow: rgba(255, 255, 255, 0.247059) 1px 1px 1px inset, rgba(0, 0, 0, 0.498039) 0px 1px 3px;       font:bold 14px Arial, sans-serif;       line-height: 1em;       overflow: hidden;       cursor:pointer;      top: 0%;       z-index: 9999;       display: block;       background-position: center 0px;       background-repeat: no-repeat;      background-color: #57A957;      float: right;      -webkit-transition:0.3s ease-out background-color,0.1s ease-out padding-right;      -moz-transition:0.3s ease-out background-color,0.1s ease-out padding-right;    }         .ue-button:hover {        background-color: #F45C5C;        padding-right:3px;    }        .ue-right {        border-right-width: 0px;        border-style: solid none solid solid;         border-radius: 5px 0px 0px 5px;     }    .ue-bottom {        float: left;        border-bottom-width: 0px;        border-style: solid solid solid solid;        border-radius: 5px 5px 0px 0px;    }    .ue-top {        float: left;        border-top-width: 0px;        border-style: solid solid solid solid;         border-radius: 0px 0px 5px 5px;     }    .ue-left.ue-button {        left: 0px;        border-left-width: 0px;         border-style: solid solid solid none;         border-radius: 0 5px 5px 0;     }        .ue-left.ue-button #ueTabLabel {        padding:0px 0px 0px 0px !important;        border-radius: 0 5px 5px 0;     }    .ue-right.ue-button #ueTabLabel {        padding:10px 0px 0px 0px !important;    }    .ue-button.ue-chat.ue-bottom, .ue-button.ue-chat.ue-top{        float:left;         margin-right:5px    }    .ue-button.ue-chat.ue-left, .ue-button.ue-chat.ue-right{        margin-bottom:5px    }        .ue-button.ue-hidden {        opacity: 0;         filter: alpha(opacity=0);         display: none;     }    </style><div href="#" onclick="return false;" class="ue-tab-container" style="width:27px;max-width:27px;position: fixed;right: 0px;top:35%;"><div id="ueChatButton" class="ue-button ue-right ue-chat ue-hidden" onclick="UE.Chat.open();">        <img class="ueLabel" src="./Снимок_files/Y2hhdA==" style="width:27px;max-width:27px;vertical-align:top; border:0; background-color: transparent; padding:0; margin:0;">        </div><div id="ueButton" class="ue-button ue-right ue-feedback" onclick="UE.Popin.show(); return false;">        <img class="ueLabel" src="./Снимок_files/ZmVlZGJhY2s=" style="width:27px;max-width:27px;vertical-align:top; border:0; background-color: transparent; padding:0; margin:0;">        </div></div></span>
+
+<div class="cart-placeholder"><div class="cart-block-container" style="display:none"><div class="cart-block btn-group"><a href="https://refactoring.guru/ru/design-patterns/memento#checkout" class="btn cart open-checkout"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;<span class="cart-text">0 продуктов в корзине</span>&nbsp;<strong class="cart-total">($0.00)</strong></a><a href="https://refactoring.guru/ru/design-patterns/memento#checkout" class="btn btn-featured checkout open-checkout">Купить</a></div></div></div>
+
+<main role="main" class="main-content top-content center-content " data-page_class="">
+    <div class="main-content-container center-content-container">
+                <div class="pattern page text">
+<article>
+    <div class="breadcrumb">
+                                    <a class="home" href="https://refactoring.guru/"><i class="fa fa-home"></i></a>
+                                                / <a class="type" href="https://refactoring.guru/ru/design-patterns">Паттерны проектирования</a>
+                                                / <a class="type" href="https://refactoring.guru/ru/design-patterns/behavioral-patterns">Поведенческие паттерны</a>
+                        </div>
+    <div class="aka">
+            Также известен как
+            <span>Хранитель, Memento</span>
+        </div>
+        <h1 class="title">Снимок</h1>
+        <script type="text/javascript">
+        // Shorten examples titles for users.
+        var h1 = document.getElementsByTagName("H1")[0];
+        if (h1.offsetHeight > 160) {
+            h1.className += ' smaller';
+        }
+
+        // Small beautification for pattern examples.
+        var title = h1.innerHTML;
+        title = title.replace(/^(Java|C\+\+|C#|PHP|Python|Ruby|Delphi): (.*)$/, '<strong>$1:</strong> $2');
+        h1.innerHTML = title;
+    </script>
+
+    
+
+    <h2><i class="fa fa-hand-peace-o" aria-hidden="true"></i> Суть паттерна</h2>
+<p>Позволяет сохранять вне объекта снимок его состояния, не нарушая инкапсуляции. Позже, используя этот снимок можно восстановить прошлое состояние объекта.</p>
+<h2><i class="fa fa-frown-o" aria-hidden="true"></i> Проблема</h2>
+<p>Нужно восстанавливать объекты к их прежнему состоянию (т.е. иметь операцию отмены). Причём отмену хочется реализовать так, чтобы не раскрывать внутреннего представления объектов системы. Другими словами, вам не хочется делать все поля объектов публичными, чтобы была возможность скопировать их данные.</p>
+<h2><i class="fa fa-smile-o" aria-hidden="true"></i> Решение</h2>
+<p>Если снятие снимка «извне» объекта нарушит инкапсуляцию, то почему бы не снять его «изнутри»?</p>
+<p>Объект, владеющий состоянием, должен иметь два метода:</p>
+<ul>
+<li>
+<code>сделатьСнимок()</code>: будет создавать специальный объект-снимок и заполнять его текущими значениями своих публичных и приватных полей.</li>
+<li>
+<code>восстановитьСостояние(х: Снимок)</code>: должен скопировать значения полей из поданного объекта-снимка.</li>
+</ul>
+<p>Теперь, перед тем как изменить состояние объекта, Клиент может сначала получить его снимок и сохранить его в истории. Затем, если нужно вернуть прежнее состояние, Клиент передаст снимок обратно в объект.</p>
+<p>Как видите, чтобы сделать операции отмены и повтора в вашем приложении, достаточно иметь стек из <a href="https://refactoring.guru/ru/design-patterns/command" title="Command">Команд</a>, и стек из <a href="https://refactoring.guru/ru/design-patterns/memento" title="Memento">Снимков</a>.</p>
+<div class="section structure-container">
+<h2><i class="fa fa-sitemap" aria-hidden="true"></i> Структура</h2>
+<div class="structure">
+<h3>Классическая реализация</h3>
+<div class="memento-classic">
+<div class="image"><img src="./Снимок_files/ru-MementoStructure.png" alt="Схема структуры классов паттерна Снимок (Хранитель)"></div>
+</div>
+<h3>Снимки с повышенной защитой</h3>
+<p>Существует альтернативная реализация паттерна Снимок, с ещё более жёстким контролем доступа к данным <em>объекта-снимка</em>.</p>
+<div class="memento-safe">
+<div class="image"><img src="./Снимок_files/ru-MementoStructureAlternative.png" alt="Снимок с повышенной защитой"></div>
+</div>
+<ol>
+<li>
+<p><strong>Создатель</strong> изготовляет <em>снимки</em> своего состояния по запросу, а также воспроизводит прошлое состояние, если подать в него готовый снимок.</p>
+</li>
+<li>
+<p><strong>Снимок</strong> простой объект данных, содержащий состояние <em>Создателя</em>. Объект снимка должен быть неизменяемым. В идеале, <em>Создатель</em> передаёт данные в снимок за один раз через конструктор.</p>
+</li>
+<li>
+<p><strong>Клиент</strong> должен знать когда и зачем делать снимок <em>Создателя</em>, а также когда его нужно восстановить.</p>
+</li>
+<li>
+<p>Зачастую <em>клиент</em> содержит целый стек из <em>объектов—снимков</em>. Если понадобится сделать отмену, он возьмёт последний объект из стека.</p>
+</li>
+<li>
+<p>В <strong>Создателе</strong> метод восстановления заменяется прямыми сеттерами состояния.</p>
+</li>
+<li>
+<p><strong>Снимок</strong> теряет публичный геттер состояния.</p>
+<p>Взамен снимок получит публичный метод восстановления, из которого он и передаст в исходный объект своё приватное состояние.</p>
+</li>
+<li>
+<p>В этой реализации код <strong>Клиента</strong> чуточку проще, так как для начала восстановления теперь нужен только объект снимка.</p>
+</li>
+</ol>
+</div></div>
+<div class="section pseudocode">
+<h2><i class="fa fa-hashtag" aria-hidden="true"></i> Псевдокод</h2>
+<pre class="code cm-s-default CodeMirror" lang="pseudocode"><span class="cm-doc">// Класс создателя должен иметь специальный метод, который сохраняет состояние</span>
+<span class="cm-doc">// создателя в новом объекте-снимке.</span>
+<span class="cm-keyword">class</span> <span class="cm-def1">Editor</span> <span class="cm-keyword">is</span>
+    <span class="cm-keyword">private</span> <span class="cm-keyword">field</span> <span class="cm-def3">text</span><span class="cm-bracket">:</span> <span class="cm-variable">string</span>
+    <span class="cm-keyword">private</span> <span class="cm-keyword">field</span> <span class="cm-def3">cursorX</span>, <span class="cm-def3">cursorY</span>, <span class="cm-def3">selectionWidth</span>
+
+    <span class="cm-keyword">method</span> <span class="cm-def3">setText</span><span class="cm-bracket">(</span><span class="cm-variable">text</span><span class="cm-bracket">)</span> <span class="cm-keyword">is</span>
+        <span class="cm-atom">this</span>.<span class="cm-variable">text</span> <span class="cm-operator">=</span> <span class="cm-variable">text</span>
+
+    <span class="cm-keyword">method</span> <span class="cm-def3">setCursor</span><span class="cm-bracket">(</span><span class="cm-variable">x</span>, <span class="cm-variable">y</span><span class="cm-bracket">)</span> <span class="cm-keyword">is</span>
+        <span class="cm-atom">this</span>.<span class="cm-variable">cursorX</span> <span class="cm-operator">=</span> <span class="cm-variable">cursorX</span>
+        <span class="cm-atom">this</span>.<span class="cm-variable">cursorY</span> <span class="cm-operator">=</span> <span class="cm-variable">cursorY</span>
+
+    <span class="cm-keyword">method</span> <span class="cm-def3">selectionWidth</span><span class="cm-bracket">(</span><span class="cm-variable">width</span><span class="cm-bracket">)</span> <span class="cm-keyword">is</span>
+        <span class="cm-atom">this</span>.<span class="cm-variable">selectionWidth</span> <span class="cm-operator">=</span> <span class="cm-variable">width</span>
+
+    <span class="cm-keyword">method</span> <span class="cm-def3">saveState</span><span class="cm-bracket">(</span><span class="cm-bracket">)</span><span class="cm-bracket">:</span><span class="cm-variable">EditorState</span> <span class="cm-keyword">is</span>
+        <span class="cm-doc">// Снимок — неизменяемый объект, поэтому Создатель передаёт все своё</span>
+        <span class="cm-doc">// состояние через параметры конструктора.</span>
+        <span class="cm-keyword">return</span> <span class="cm-keyword">new</span> <span class="cm-variable">EditorState</span><span class="cm-bracket">(</span><span class="cm-atom">this</span>, <span class="cm-variable">text</span>, <span class="cm-variable">cursorX</span>, <span class="cm-variable">cursorY</span>, <span class="cm-variable">selectionWidth</span><span class="cm-bracket">)</span>
+
+<span class="cm-doc">// Снимок хранит прошлое состояние редактора.</span>
+<span class="cm-keyword">class</span> <span class="cm-def1">EditorState</span> <span class="cm-keyword">is</span>
+    <span class="cm-keyword">private</span> <span class="cm-keyword">field</span> <span class="cm-def3">editor</span><span class="cm-bracket">:</span> <span class="cm-variable">Editor</span>
+    <span class="cm-keyword">private</span> <span class="cm-keyword">field</span> <span class="cm-def3">text</span><span class="cm-bracket">:</span> <span class="cm-variable">string</span>
+    <span class="cm-keyword">private</span> <span class="cm-keyword">field</span> <span class="cm-def3">cursorX</span>, <span class="cm-def3">cursorY</span>, <span class="cm-def3">selectionWidth</span>
+
+    <span class="cm-keyword">constructor</span> <span class="cm-def3">EditorState</span><span class="cm-bracket">(</span><span class="cm-variable">editor</span>, <span class="cm-variable">text</span>, <span class="cm-variable">cursorX</span>, <span class="cm-variable">cursorY</span>, <span class="cm-variable">selectionWidth</span><span class="cm-bracket">)</span> <span class="cm-keyword">is</span>
+        <span class="cm-atom">this</span>.<span class="cm-variable">editor</span> <span class="cm-operator">=</span> <span class="cm-variable">editor</span>
+        <span class="cm-atom">this</span>.<span class="cm-variable">text</span> <span class="cm-operator">=</span> <span class="cm-variable">text</span>
+        <span class="cm-atom">this</span>.<span class="cm-variable">cursorX</span> <span class="cm-operator">=</span> <span class="cm-variable">cursorX</span>
+        <span class="cm-atom">this</span>.<span class="cm-variable">cursorY</span> <span class="cm-operator">=</span> <span class="cm-variable">cursorY</span>
+        <span class="cm-atom">this</span>.<span class="cm-variable">selectionWidth</span> <span class="cm-operator">=</span> <span class="cm-variable">selectionWidth</span>
+
+    <span class="cm-doc">// В нужный момент, владелец снимка может восстановить состояние редактора.</span>
+    <span class="cm-keyword">method</span> <span class="cm-def3">restore</span><span class="cm-bracket">(</span><span class="cm-bracket">)</span> <span class="cm-keyword">is</span>
+        <span class="cm-variable">editor</span>.<span class="cm-variable">setText</span><span class="cm-bracket">(</span><span class="cm-variable">text</span><span class="cm-bracket">)</span>
+        <span class="cm-variable">editor</span>.<span class="cm-variable">setCursor</span><span class="cm-bracket">(</span><span class="cm-variable">cursorX</span>, <span class="cm-variable">cursorY</span><span class="cm-bracket">)</span>
+        <span class="cm-variable">editor</span>.<span class="cm-variable">selectionWidth</span><span class="cm-bracket">(</span><span class="cm-variable">selectionWidth</span><span class="cm-bracket">)</span>
+
+<span class="cm-doc">// Клиентом может выступать класс команд (см. паттерн Команда). В этом случае,</span>
+<span class="cm-doc">// команда сохраняет снимок получателя перед тем, как выполнить действие. А при</span>
+<span class="cm-doc">// отмене, возвращает получателя в предыдущее состояние.</span>
+<span class="cm-keyword">class</span> <span class="cm-def1">Command</span> <span class="cm-keyword">is</span>
+    <span class="cm-keyword">field</span> <span class="cm-def3">backup</span><span class="cm-bracket">:</span> <span class="cm-variable">EditorState</span>
+
+    <span class="cm-keyword">method</span> <span class="cm-def3">backup</span><span class="cm-bracket">(</span><span class="cm-bracket">)</span> <span class="cm-keyword">is</span>
+        <span class="cm-variable">backup</span> <span class="cm-operator">=</span> <span class="cm-variable">editor</span>.<span class="cm-variable">saveState</span><span class="cm-bracket">(</span><span class="cm-bracket">)</span>
+
+    <span class="cm-keyword">method</span> <span class="cm-def3">undo</span><span class="cm-bracket">(</span><span class="cm-bracket">)</span> <span class="cm-keyword">is</span>
+        <span class="cm-keyword">if</span> <span class="cm-bracket">(</span><span class="cm-variable">backup</span> <span class="cm-operator">!</span><span class="cm-operator">=</span> <span class="cm-atom">null</span><span class="cm-bracket">)</span>
+            <span class="cm-variable">backup</span>.<span class="cm-variable">restore</span><span class="cm-bracket">(</span><span class="cm-bracket">)</span>
+    <span class="cm-comment">// ...</span>
+</pre>
+<div class="section applicability-container">
+<h2><i class="fa fa-lightbulb-o" aria-hidden="true"></i> Применимость</h2>
+<div class="applicability">
+<div class="applicability-problem">
+<p><i class="fa fa-fw fa-bug"></i> Если нужно сохранять мгновенный снимок состояния объекта (или его части), чтобы впоследствии объект можно было восстановить в том же состоянии.</p>
+</div><div class="applicability-solution">
+<p><i class="fa fa-fw fa-bolt"></i> Паттерн Снимок позволяет делать любое количество снимков объекта и хранить их независимо от объекта, с которого делают снимок. Снимки часто используют не только для реализации операции отмены, но и для транзакций (когда состояние объекта нужно откатить, если операция не удалась).</p>
+</div>
+<div class="applicability-problem">
+<p><i class="fa fa-fw fa-bug"></i> Прямое получение состояния объекта раскрывает детали его реализации, нарушая инкапсуляцию.</p>
+</div><div class="applicability-solution">
+<p><i class="fa fa-fw fa-bolt"></i> Паттерн предлагает изготовить снимок самому исходному объекту, так как он видит все свои поля без исключений.</p>
+</div>
+</div></div>
+<h2><i class="fa fa-check-square-o" aria-hidden="true"></i> Шаги реализации</h2>
+<ol>
+<li>
+<p>Определите состояние каких объектов нужно отматывать во времени обратно.</p>
+</li>
+<li>
+<p>Создайте класс <em>Снимка</em>. Сделайте его неизменяемым.</p>
+</li>
+<li>
+<p>Добавьте в <em>исходный класс</em> операцию создания снимков. В этой операции исходный объект должен создавать новый объект-снимок и копировать в него значения всех своих полей.</p>
+</li>
+<li>
+<p>Добавьте в <em>исходный класс</em> операцию восстановления состояния из снимков.</p>
+</li>
+<li>
+<p><em>Клиент</em> должен знать о том, когда запрашивать снимки у исходного объекта снимки, где их хранить, и когда восстанавливать.</p>
+</li>
+</ol>
+<div class="section pros-cons">
+<h2><i class="fa fa-balance-scale" aria-hidden="true"></i> Преимущества и недостатки</h2>
+<div class="row"><div class="col-sm-6">
+<ul>
+<li>
+<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Не нарушает инкапсуляции исходного объекта.</li>
+<li>
+<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Упрощает структуру исходного объекта, так как ему не нужно хранить историю версий своего состояния.</li>
+</ul>
+</div><div class="col-sm-6">
+<ul>
+<li>
+<i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Требует много памяти, если клиенты слишком часто создают снимки.</li>
+<li>
+<i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Может повлечь дополнительные издержки памяти, если хранители истории не отвечают за удаление и освобождение ресурсов снимков.</li>
+<li>
+<i class="fa fa-thumbs-o-down" aria-hidden="true"></i> В некоторых языках сложно гарантировать, что только исходный объект имеет доступ к состоянию снимка.</li>
+</ul>
+</div></div></div>
+<h2><i class="fa fa-exchange" aria-hidden="true"></i> Отношения с другими паттернами</h2>
+<ul>
+<li>
+<p><a href="https://refactoring.guru/ru/design-patterns/command" title="Command">Команду</a> и <a href="https://refactoring.guru/ru/design-patterns/memento" title="Memento">Снимок</a> часто используют сообща:</p>
+<ul>
+<li>
+<em>Команда</em> содержит в себе запрос.</li>
+<li>
+<em>Снимок</em> сберегает состояние объекта в определённый момент времени.</li>
+</ul>
+<p>Для Команды важен полиморфизм, чтобы разные команды можно было подавать одному и тому же получателю. С другой стороны, интерфейс Снимка слишком узок, так как рассчитан на работу только с определённым исходным объектом.</p>
+</li>
+<li>
+<p><a href="https://refactoring.guru/ru/design-patterns/command" title="Command">Команда</a> может делать <a href="https://refactoring.guru/ru/design-patterns/memento" title="Memento">Снимок</a> состояния объекта перед тем, как выполнить действие, чтобы потом это действие можно было отменить.</p>
+</li>
+<li>
+<p><a href="https://refactoring.guru/ru/design-patterns/memento" title="Memento">Снимок</a> часто используется вместе с <a href="https://refactoring.guru/ru/design-patterns/iterator" title="Iterator">Итератором</a>. Итератор может держать в снимке текущее состояние обхода своей структуры данных.</p>
+</li>
+</ul>
+
+
+    </div></article>
+
+<nav class="prev-next">
+                    <div class="next">
+                <h4>Читаем дальше</h4>
+                <a rel="next" href="https://refactoring.guru/ru/design-patterns/observer" class="btn">Наблюдатель <span class="fa fa-arrow-right"></span></a>
+            </div>
+                            <div class="prev">
+                <h4>Вернуться назад</h4>
+                <a rel="prev" href="https://refactoring.guru/ru/design-patterns/mediator" class="btn"><span class="fa fa-arrow-left"></span> Посредник </a>
+            </div>
+            </nav>
+</div>
+<aside class="feature content-secondary affix-top">
+    </aside>
+            </div>
+</main>
+
+<nav class="navigation" role="navigation">
+    <div class="navigation-container">
+        <a href="https://refactoring.guru/ru/design-patterns/memento#" class="navigation-toggle"><i class="fa fa-bars"></i></a>
+        <a class="navigation-brand" href="https://refactoring.guru/ru">
+            <img alt="RefactoringGuru" src="./Снимок_files/logo-mobile.png">
+        </a>
+        <ul class="navigation-menu navigation-chapters">
+            <li>
+                <a href="https://refactoring.guru/ru/refactoring" title="Рефакторинг">Рефакторинг</a>
+            </li>
+            <li>
+                <a href="https://refactoring.guru/ru/design-patterns" title="Паттерны проектирования">Паттерны</a>
+            </li>
+        </ul>
+        <div class="social-likes social-likes_visible social-likes_ready" data-url="http://refactoring.guru/" style="visibility: visible;">
+    <div class="social-likes__widget social-likes__widget_twitter" title="Поделиться в Twitter"><span class="social-likes__button social-likes__button_twitter"><span class="social-likes__icon social-likes__icon_twitter"></span>Twitter</span></div>
+    <div class="social-likes__widget social-likes__widget_facebook" title="Поделиться в Facebook"><span class="social-likes__button social-likes__button_facebook"><span class="social-likes__icon social-likes__icon_facebook"></span>Facebook</span><span class="social-likes__counter social-likes__counter_facebook">204</span></div>
+    <div class="social-likes__widget social-likes__widget_plusone" title="Поделиться в Google+"><span class="social-likes__button social-likes__button_plusone"><span class="social-likes__icon social-likes__icon_plusone"></span>Google+</span><span class="social-likes__counter social-likes__counter_plusone">237</span></div>
+        <div class="social-likes__widget social-likes__widget_vkontakte" title="Поделиться ВКонтакте"><span class="social-likes__button social-likes__button_vkontakte"><span class="social-likes__icon social-likes__icon_vkontakte"></span>Вконтакте</span><span class="social-likes__counter social-likes__counter_vkontakte">295</span></div>
+    </div>
+        <ul class="navigation-menu">
+                        <li class="dropdown">
+                <a class="dropdown-toggle" type="button" id="dropdownLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-globe"></i> <span class="caption hidden-lg-down">Язык</span>
+                </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownLanguage">
+
+                                                    <a href="https://refactoring.guru/ru/design-patterns/memento" class="dropdown-item locale-link" data-locale="ru" title="Русский">Русский</a>
+                                                                                                            <a href="https://refactoring.guru/" class="dropdown-item locale-link" data-locale="en" title="English">English</a>
+                                                                                                                                                                    <a href="https://refactoring.guru/uk" class="dropdown-item locale-link" data-locale="uk" title="Українська">Українська</a>
+                                                                        </div>
+                            </li>
+                        <li>
+                <a class="userecho-private" href="https://refactoring.userecho.com/?show_feedback_form_private=true" rel="nofollow" title="Связаться">
+                    <i class="fa fa-envelope"></i> <span class="caption hidden-lg-down">Связаться</span>
+                </a>
+            </li>
+                            <li>
+                    <a href="https://refactoring.guru/ru/home" title="Войти"><i class="fa fa-user"></i> <span class="caption hidden-lg-down">Войти</span></a>
+                </li>
+                    </ul>
+    </div>
+</nav>
+<aside class="sidebar main-menu nano has-scrollbar">
+    <a href="https://refactoring.guru/ru/design-patterns/memento#" class="navigation-toggle"><i class="fa fa-fw fa-times"></i></a>
+    <div class="nano-content" tabindex="0" style="right: -17px;">
+        <a class="menu-brand" href="https://refactoring.guru/ru">
+            <img alt="RefactoringGuru" src="./Снимок_files/logo.png">
+        </a>
+        <ul class="menu-list ready">
+                    <li class="featured">
+    <a href="https://refactoring.guru/ru/refactoring/course">
+        <i class="fa fa-fw fa-star" aria-hidden="true"></i> Премиум курс
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring">
+        <i class="fa fa-fw fa-scissors" aria-hidden="true"></i> Рефакторинг
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/what-is-refactoring">
+        Введение в рефакторинг
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/what-is-refactoring">
+        Чистый код
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/technical-debt">
+        Технический долг
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/when">
+        Когда рефакторить
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/how-to">
+        Как рефакторить
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/catalog">
+        Каталог
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/smells">
+        Запахи кода
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/smells/bloaters">
+        Раздувальщики
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/long-method">
+        Длинный метод
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/large-class">
+        Большой класс
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/primitive-obsession">
+        Одержимость элементарными типами
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/long-parameter-list">
+        Длинный список параметров
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/data-clumps">
+        Группы данных
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/smells/oo-abusers">
+        Нарушители объектно-ориентированного дизайна
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/switch-statements">
+        Операторы switch
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/temporary-field">
+        Временное поле
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/refused-bequest">
+        Отказ от наследства
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/alternative-classes-with-different-interfaces">
+        Альтернативные классы с разными интерфейсами
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/smells/change-preventers">
+        Утяжелители изменений
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/divergent-change">
+        Расходящиеся модификации
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/shotgun-surgery">
+        Стрельба дробью
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/parallel-inheritance-hierarchies">
+        Параллельные иерархии наследования
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/smells/dispensables">
+        Замусориватели
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/comments">
+        Комментарии
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/duplicate-code">
+        Дублирование кода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/lazy-class">
+        Ленивый класс
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/data-class">
+        Класс данных
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/dead-code">
+        Мёртвый код
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/speculative-generality">
+        Теоретическая общность
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/smells/couplers">
+        Опутыватели связями
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/feature-envy">
+        Завистливые функции
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/inappropriate-intimacy">
+        Неуместная близость
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/message-chains">
+        Цепочка вызовов
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/middle-man">
+        Посредник
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/smells/other">
+        Остальные запахи
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/smells/incomplete-library-class">
+        Неполнота библиотечного класса
+    </a>
+    </li>            </ul>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/techniques">
+        Рефакторинги
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/techniques/composing-methods">
+        Составление методов
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/extract-method">
+        Извлечение метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/inline-method">
+        Встраивание метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/extract-variable">
+        Извлечение переменной
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/inline-temp">
+        Встраивание переменной
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-temp-with-query">
+        Замена переменной вызовом метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/split-temporary-variable">
+        Расщепление переменной
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/remove-assignments-to-parameters">
+        Удаление присваиваний параметрам
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-method-with-method-object">
+        Замена метода объектом методов
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/substitute-algorithm">
+        Замена алгоритма
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/techniques/moving-features-between-objects">
+        Перемещение функций между объектами
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/move-method">
+        Перемещение метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/move-field">
+        Перемещение поля
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/extract-class">
+        Извлечение класса
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/inline-class">
+        Встраивание класса
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/hide-delegate">
+        Сокрытие делегирования
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/remove-middle-man">
+        Удаление посредника
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/introduce-foreign-method">
+        Введение внешнего метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/introduce-local-extension">
+        Введение локального расширения
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/techniques/organizing-data">
+        Организация данных
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/self-encapsulate-field">
+        Самоинкапсуляция поля
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-data-value-with-object">
+        Замена простого поля объектом
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/change-value-to-reference">
+        Замена значения ссылкой
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/change-reference-to-value">
+        Замена ссылки значением
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-array-with-object">
+        Замена поля-массива объектом
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/duplicate-observed-data">
+        Дублирование видимых данных
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/change-unidirectional-association-to-bidirectional">
+        Замена однонаправленной связи двунаправленной
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/change-bidirectional-association-to-unidirectional">
+        Замена двунаправленной связи однонаправленной
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-magic-number-with-symbolic-constant">
+        Замена магического числа символьной константой
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/encapsulate-field">
+        Инкапсуляция поля
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/encapsulate-collection">
+        Инкапсуляция коллекции
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-type-code-with-class">
+        Замена кодирования типа классом
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-type-code-with-subclasses">
+        Замена кодирования типа подклассами
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-type-code-with-state-strategy">
+        Замена кодирования типа состоянием/стратегией
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-subclass-with-fields">
+        Замена подкласса полями
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/techniques/simplifying-conditional-expressions">
+        Упрощение условных выражений
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/decompose-conditional">
+        Разбиение условного оператора
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/consolidate-conditional-expression">
+        Объединение условных операторов
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/consolidate-duplicate-conditional-fragments">
+        Объединение дублирующихся фрагментов в условных операторах
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/remove-control-flag">
+        Удаление управляющего флага
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-nested-conditional-with-guard-clauses">
+        Замена вложенных условных операторов граничным оператором
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-conditional-with-polymorphism">
+        Замена условного оператора полиморфизмом
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/introduce-null-object">
+        Введение Null-объекта
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/introduce-assertion">
+        Введение проверки утверждения
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/techniques/simplifying-method-calls">
+        Упрощение вызовов методов
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/rename-method">
+        Переименование метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/add-parameter">
+        Добавление параметра
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/remove-parameter">
+        Удаление параметра
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/separate-query-from-modifier">
+        Разделение запроса и модификатора
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/parameterize-method">
+        Параметризация метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-parameter-with-explicit-methods">
+        Замена параметра набором специализированных методов
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/preserve-whole-object">
+        Передача всего объекта
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-parameter-with-method-call">
+        Замена параметра вызовом метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/introduce-parameter-object">
+        Замена параметров объектом
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/remove-setting-method">
+        Удаление сеттера
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/hide-method">
+        Сокрытие метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-constructor-with-factory-method">
+        Замена конструктора фабричным методом
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-error-code-with-exception">
+        Замена кода ошибки исключением
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-exception-with-test">
+        Замена исключения проверкой условия
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/refactoring/techniques/dealing-with-generalisation">
+        Решение задач обобщения
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/pull-up-field">
+        Подъём поля
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/pull-up-method">
+        Подъём метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/pull-up-constructor-body">
+        Подъём тела конструктора
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/push-down-method">
+        Спуск метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/push-down-field">
+        Спуск поля
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/extract-subclass">
+        Извлечение подкласса
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/extract-superclass">
+        Извлечение суперкласса
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/extract-interface">
+        Извлечение интерфейса
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/collapse-hierarchy">
+        Свёртывание иерархии
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/form-template-method">
+        Создание шаблонного метода
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-inheritance-with-delegation">
+        Замена наследования делегированием
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/replace-delegation-with-inheritance">
+        Замена делегирования наследованием
+    </a>
+    </li>            </ul>
+    </li>            </ul>
+    </li>            </ul>
+    </li>                    <li class=" trail">
+    <a href="https://refactoring.guru/ru/design-patterns">
+        <i class="fa fa-fw fa-puzzle-piece" aria-hidden="true"></i> Паттерны
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/what-is-pattern">
+        Введение в паттерны
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/what-is-pattern">
+        Что такое Паттерн?
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/classification">
+        Классификация паттернов
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/why-learn-patterns">
+        Зачем знать паттерны
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/criticism">
+        Критика паттернов
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/catalog">
+        Каталог
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/creational-patterns">
+        Порождающие
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/factory-method">
+        Фабричный метод
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/abstract-factory">
+        Абстрактная фабрика
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/builder">
+        Строитель
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/prototype">
+        Прототип
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/singleton">
+        Одиночка
+    </a>
+    </li>            </ul>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/structural-patterns">
+        Структурные
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/adapter">
+        Адаптер
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/bridge">
+        Мост
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/composite">
+        Компоновщик
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/decorator">
+        Декоратор
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/facade">
+        Фасад
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/flyweight">
+        Легковес
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/proxy">
+        Заместитель
+    </a>
+    </li>            </ul>
+    </li>                    <li class=" trail">
+    <a href="https://refactoring.guru/ru/design-patterns/behavioral-patterns">
+        Поведенческие
+    </a>
+            <ul class="">
+                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/chain-of-responsibility">
+        Цепочка обязанностей
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/command">
+        Команда
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/iterator">
+        Итератор
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/mediator">
+        Посредник
+    </a>
+    </li>                    <li class=" trail active">
+    <a href="https://refactoring.guru/ru/design-patterns/memento">
+        Снимок
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/observer">
+        Наблюдатель
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/state">
+        Состояние
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/strategy">
+        Стратегия
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/template-method">
+        Шаблонный метод
+    </a>
+    </li>                    <li class="">
+    <a href="https://refactoring.guru/ru/design-patterns/visitor">
+        Посетитель
+    </a>
+    </li>            </ul>
+    </li>            </ul>
+    </li>            </ul>
+
+        <div class="sidebar-controls">
+            <div class="sidebar-controls-container">
+                <a href="https://refactoring.guru/ru/home" title="Войти"><i class="fa fa-fw fa-fw fa-user"></i> Войти</a>
+                <a href="https://refactoring.userecho.com/" class="userecho-public" rel="nofollow" title="Обратная связь"><i class="fa fa-fw fa-fw fa-envelope-o" aria-hidden="true"></i> Обратная связь</a>
+            </div>
+        </div>
+    </div>
+<div class="nano-pane"><div class="nano-slider" style="height: 368px; transform: translate(0px, 0px);"></div></div></aside>
+<footer class="footer center-content">
+    <div class="footer-container center-content-container">
+        <div class="footer-inner container-fluid">
+            <div class="row">
+                <div class="col-sm-8">
+                    <ul class="footer-list">
+                        <li><a href="https://refactoring.guru/ru">Главная</a></li>
+                        <li><a href="https://refactoring.guru/ru/catalog">Каталог</a></li>
+                        <li><a href="https://refactoring.guru/ru/course">Курс</a></li>
+                        <li><a href="https://refactoring.userecho.com/" rel="nofollow" class="userecho-public">Форум</a></li>
+                        <li><a href="https://refactoring.userecho.com/?show_feedback_form_private=true" rel="nofollow" class="userecho-private">Связаться</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                    <ul class="footer-iconic-list">
+                        <li><a href="https://www.facebook.com/refactoring.guru"><i class="fa fa-facebook-square"></i></a></li>
+                        <li><a href="https://google.com/+RefactoringGuru"><i class="fa fa-google-plus-square"></i></a></li>
+                        <li><a href="https://twitter.com/refactoringguru"><i class="fa fa-twitter-square"></i></a></li>
+                        <li><a href="https://github.com/shvetsgroup/refactoring.guru-examples"><i class="fa fa-github-alt"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        © 2014-2017 <a href="https://refactoring.guru/ru">Refactoring.Guru</a><span class="hidden-sm-down"> / </span><br class="hidden-md-up">All rights reserved.
+    </div>
+</footer>
+
+    <script>
+function extend() {
+    var extended = {};
+    var deep = false;
+    var i = 0;
+    var length = arguments.length;
+    if ( Object.prototype.toString.call( arguments[0] ) === '[object Boolean]' ) {
+        deep = arguments[0];
+        i++;
+    }
+    var merge = function (obj) {
+        for ( var prop in obj ) {
+            if ( Object.prototype.hasOwnProperty.call( obj, prop ) ) {
+                // If deep merge and property is an object, merge properties
+                if ( deep && Object.prototype.toString.call(obj[prop]) === '[object Object]' ) {
+                    extended[prop] = extend( true, extended[prop], obj[prop] );
+                } else {
+                    extended[prop] = obj[prop];
+                }
+            }
+        }
+    };
+    for ( ; i < length; i++ ) {
+        var obj = arguments[i];
+        merge(obj);
+    }
+    return extended;
+}
+</script>
+<script>
++function(script_defaults) {
+    for (var property in script_defaults) {
+        if (window[property] !== null && typeof window[property] === 'object') {
+            window[property] = extend(true, window[property], script_defaults[property])
+        }
+        else {
+            window[property] = script_defaults[property];
+        }
+    }
+}({"user_echo_alias":"refactoring","user_echo_host":"refactoring.userecho.com","user_echo_private_forum":2,"user_echo_public_forum":1,"user_echo_sso_token":"","locale":"ru","locale_prefix":"ru/"});
+</script>
+<script src="./Снимок_files/public.min-921957e119.js.Без названия"></script>
+
+
+<script type="text/javascript">
+    var _ues = {
+        host: 'refactoring.userecho.com',
+        forum: '31851',
+        lang: 'ru',
+            tab_image_hash: '0L7RgdGC0LDQstC40YLRjCDQvtGC0LfRi9Cy',
+        tab_chat_hash: '0YfQsNGC',
+            tab_corner_radius: 5,
+        tab_font_size: 20,
+        tab_alignment: 'right',
+        tab_text_color: '#FFFFFF',
+        tab_text_shadow_color: '#00000055',
+        tab_bg_color: '#57A957',
+        tab_hover_color: '#F45C5C'
+    };
+</script>
+
+<script async="" src="./Снимок_files/analytics.js.Без названия"></script>
+<script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-521840-40', 'auto');
+            ga('require', 'ec');
+    ga('send', 'pageview');
+</script>
+
+
+<div class="modal fade" id="checkout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form role="form">
+                <div class="checkout-wrapper  with-cart ">
+                            <div class="cart-upsell">
+                    <div class="cart">
+                        <h2>Покупки / <span class="cart-total"><span>Всего:</span> <span class="cart-total-value">$0.00</span></span></h2>
+
+                        <div class="cart-items" data-empty-text="Ваша корзина пуста (и печальна)" data-add-text="Добавить" data-remove-text="Убрать"><div class="cart-empty"><i class="fa fa-frown-o"></i> Ваша корзина пуста (и печальна)</div></div>
+                    </div>
+                    <div class="upsell">
+                        <h3>Сегодняшние акции</h3>
+
+                        <div class="cart-items"><div class="cart-item"><div class="cart-item-image"><a href="https://refactoring.guru/course"><img src="./Снимок_files/CoverHIRES-en.jpg"></a></div><div class="cart-item-sku"><a href="https://refactoring.guru/course">Refactoring Course</a></div><div class="cart-item-old_price">$50.00</div><div class="cart-item-discount">-60%</div><div class="cart-item-price">$19.95</div><a href="https://refactoring.guru/ru/design-patterns/memento#" class="cart-item-action btn btn-sm btn-success" title="Add">+ Добавить</a></div></div>
+                    </div>
+                </div>
+                        <div class="modals">
+                <div class="modal-dialog flip-over-back" id="step_login" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h2><i class="fa fa-user"></i> Аккаунт</h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="messages" style="display: none;">
+                                <div class="alert alert-danger" role="alert">
+                                    <ul class="text"></ul>
+                                </div>
+                            </div>
+                            
+                            <div class="row form-login">
+                                <div class="col-xs-12 col-sm-6 login-box">
+                                    <h3 class="login-title"><a href="https://refactoring.guru/ru/design-patterns/memento#" class="ajax-link register active">Создать аккаунт</a> / <a href="https://refactoring.guru/ru/design-patterns/memento#" class="ajax-link log-in">Войти</a></h3>
+
+                                    <div class="form-group email">
+                                        <input type="email" required="" class="form-control" autocomplete="email" id="email" placeholder="Email" value="">
+                                    <span class="field-check"></span></div>
+
+                                    <div class="form-group password">
+                                        <input type="password" required="" class="form-control" id="password" placeholder="Пароль">
+
+                                        <div class="help-block">
+                                            Минимум 6 символов.
+                                        </div>
+                                    <span class="field-check"></span></div>
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+
+                                    <h3 style="text-align:center;">Или зайдите через</h3>
+
+                                    <div class="social-login">
+                                        <a href="https://refactoring.guru/ru/social/facebook/login?destination=%25destination%25&amp;destination_hash=checkout" class="facebook text-hide">Facebook</a>
+                                        <a href="https://refactoring.guru/ru/social/google/login?destination=%25destination%25&amp;destination_hash=checkout" class="googleplus text-hide">Google</a>
+                                        <a href="https://refactoring.guru/ru/social/github/login?destination=%25destination%25&amp;destination_hash=checkout" class="github text-hide">Github</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer ta-center">
+                            <a href="https://refactoring.guru/ru/design-patterns/memento#" class="btn btn-wide btn-info btn-next">Далее
+                                »</a>
+                        </div>
+                                            </div>
+                </div>
+
+                <div class="modal-dialog flip-over-back" id="step_billing" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h2><i class="fa fa-lock"></i> Платежные данные</h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="messages" style="display: none;">
+                                <div class="alert alert-danger" role="alert">
+                                    <ul class="text"></ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 billing-box">
+                                    <div class="row">
+                                        <div class="form-group first_name col-xs-12 col-sm-4">
+                                            <input type="text" required="" class="form-control" id="first_name" autocomplete="given-name" placeholder="Имя" value="">
+                                        <span class="field-check"></span></div>
+
+                                        <div class="form-group last_name col-xs-12 col-sm-4">
+                                            <input type="text" required="" class="form-control" id="last_name" autocomplete="family-name" placeholder="Фамилия" value="">
+                                        <span class="field-check"></span></div>
+
+                                        <div class="form-group company col-xs-12 col-sm-4">
+                                            <input type="text" class="form-control" id="company" autocomplete="organization" placeholder="Компания" value="">
+                                        <span class="field-check"></span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group street col-xs-12">
+                                            <input type="text" required="" class="form-control" id="street" autocomplete="street-address" placeholder="Адрес" value="">
+                                        <span class="field-check"></span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group country col-xs-12 col-sm-6 has-success">
+                                            <select class="form-control form-select" id="country" required="" autocomplete="country">
+                                                <option value="" disabled="" selected="">Страна</option>
+                                                                                                    <option value="AFG">Afghanistan</option>
+                                                                                                    <option value="ALA">Åland Islands</option>
+                                                                                                    <option value="ALB">Albania</option>
+                                                                                                    <option value="DZA">Algeria</option>
+                                                                                                    <option value="ASM">American Samoa</option>
+                                                                                                    <option value="AND">Andorra</option>
+                                                                                                    <option value="AGO">Angola</option>
+                                                                                                    <option value="AIA">Anguilla</option>
+                                                                                                    <option value="ATA">Antarctica</option>
+                                                                                                    <option value="ATG">Antigua and Barbuda</option>
+                                                                                                    <option value="ARG">Argentina</option>
+                                                                                                    <option value="ARM">Armenia</option>
+                                                                                                    <option value="ABW">Aruba</option>
+                                                                                                    <option value="AUS">Australia</option>
+                                                                                                    <option value="AUT">Austria</option>
+                                                                                                    <option value="AZE">Azerbaijan</option>
+                                                                                                    <option value="BHS">Bahamas</option>
+                                                                                                    <option value="BHR">Bahrain</option>
+                                                                                                    <option value="BGD">Bangladesh</option>
+                                                                                                    <option value="BRB">Barbados</option>
+                                                                                                    <option value="BLR">Belarus</option>
+                                                                                                    <option value="BEL">Belgium</option>
+                                                                                                    <option value="BLZ">Belize</option>
+                                                                                                    <option value="BEN">Benin</option>
+                                                                                                    <option value="BMU">Bermuda</option>
+                                                                                                    <option value="BTN">Bhutan</option>
+                                                                                                    <option value="BOL">Bolivia, Plurinational State of</option>
+                                                                                                    <option value="BES">Bonaire, Sint Eustatius and Saba</option>
+                                                                                                    <option value="BIH">Bosnia &amp; Herzegovina</option>
+                                                                                                    <option value="BWA">Botswana</option>
+                                                                                                    <option value="BVT">Bouvet Island</option>
+                                                                                                    <option value="BRA">Brazil</option>
+                                                                                                    <option value="IOT">British Indian Ocean Territory</option>
+                                                                                                    <option value="BRN">Brunei Darussalam</option>
+                                                                                                    <option value="BGR">Bulgaria</option>
+                                                                                                    <option value="BFA">Burkina Faso</option>
+                                                                                                    <option value="BDI">Burundi</option>
+                                                                                                    <option value="KHM">Cambodia</option>
+                                                                                                    <option value="CMR">Cameroon</option>
+                                                                                                    <option value="CAN">Canada</option>
+                                                                                                    <option value="CPV">Cape Verde</option>
+                                                                                                    <option value="CYM">Cayman Islands</option>
+                                                                                                    <option value="CAF">Central African Republic</option>
+                                                                                                    <option value="TCD">Chad</option>
+                                                                                                    <option value="CHL">Chile</option>
+                                                                                                    <option value="CHN">China</option>
+                                                                                                    <option value="CXR">Christmas Island</option>
+                                                                                                    <option value="CCK">Cocos (Keeling) Islands</option>
+                                                                                                    <option value="COL">Colombia</option>
+                                                                                                    <option value="COM">Comoros</option>
+                                                                                                    <option value="COG">Congo</option>
+                                                                                                    <option value="COD">Congo, the Democratic Republic of the</option>
+                                                                                                    <option value="COK">Cook Islands</option>
+                                                                                                    <option value="CRI">Costa Rica</option>
+                                                                                                    <option value="CIV">Côte d'Ivoire</option>
+                                                                                                    <option value="HRV">Croatia</option>
+                                                                                                    <option value="CUB">Cuba</option>
+                                                                                                    <option value="CUW">Curaçao</option>
+                                                                                                    <option value="CYP">Cyprus</option>
+                                                                                                    <option value="CZE">Czech Republic</option>
+                                                                                                    <option value="DNK">Denmark</option>
+                                                                                                    <option value="DJI">Djibouti</option>
+                                                                                                    <option value="DMA">Dominica</option>
+                                                                                                    <option value="DOM">Dominican Republic</option>
+                                                                                                    <option value="ECU">Ecuador</option>
+                                                                                                    <option value="EGY">Egypt</option>
+                                                                                                    <option value="SLV">El Salvador</option>
+                                                                                                    <option value="GNQ">Equatorial Guinea</option>
+                                                                                                    <option value="ERI">Eritrea</option>
+                                                                                                    <option value="EST">Estonia</option>
+                                                                                                    <option value="ETH">Ethiopia</option>
+                                                                                                    <option value="FLK">Falkland Islands (Malvinas)</option>
+                                                                                                    <option value="FRO">Faroe Islands</option>
+                                                                                                    <option value="FJI">Fiji</option>
+                                                                                                    <option value="FIN">Finland</option>
+                                                                                                    <option value="FRA">France</option>
+                                                                                                    <option value="GUF">French Guiana</option>
+                                                                                                    <option value="PYF">French Polynesia</option>
+                                                                                                    <option value="ATF">French Southern Territories</option>
+                                                                                                    <option value="GAB">Gabon</option>
+                                                                                                    <option value="GMB">Gambia</option>
+                                                                                                    <option value="GEO">Georgia</option>
+                                                                                                    <option value="DEU">Germany</option>
+                                                                                                    <option value="GHA">Ghana</option>
+                                                                                                    <option value="GIB">Gibraltar</option>
+                                                                                                    <option value="GRC">Greece</option>
+                                                                                                    <option value="GRL">Greenland</option>
+                                                                                                    <option value="GRD">Grenada</option>
+                                                                                                    <option value="GLP">Guadeloupe</option>
+                                                                                                    <option value="GUM">Guam</option>
+                                                                                                    <option value="GTM">Guatemala</option>
+                                                                                                    <option value="GGY">Guernsey</option>
+                                                                                                    <option value="GIN">Guinea</option>
+                                                                                                    <option value="GNB">Guinea-Bissau</option>
+                                                                                                    <option value="GUY">Guyana</option>
+                                                                                                    <option value="HTI">Haiti</option>
+                                                                                                    <option value="HMD">Heard Island and McDonald Islands</option>
+                                                                                                    <option value="VAT">Holy See (Vatican City State)</option>
+                                                                                                    <option value="HND">Honduras</option>
+                                                                                                    <option value="HKG">Hong Kong</option>
+                                                                                                    <option value="HUN">Hungary</option>
+                                                                                                    <option value="ISL">Iceland</option>
+                                                                                                    <option value="IND">India</option>
+                                                                                                    <option value="IDN">Indonesia</option>
+                                                                                                    <option value="IRN">Iran, Islamic Republic of</option>
+                                                                                                    <option value="IRQ">Iraq</option>
+                                                                                                    <option value="IRL">Ireland</option>
+                                                                                                    <option value="IMN">Isle of Man</option>
+                                                                                                    <option value="ISR">Israel</option>
+                                                                                                    <option value="ITA">Italy</option>
+                                                                                                    <option value="JAM">Jamaica</option>
+                                                                                                    <option value="JPN">Japan</option>
+                                                                                                    <option value="JEY">Jersey</option>
+                                                                                                    <option value="JOR">Jordan</option>
+                                                                                                    <option value="KAZ">Kazakhstan</option>
+                                                                                                    <option value="KEN">Kenya</option>
+                                                                                                    <option value="KIR">Kiribati</option>
+                                                                                                    <option value="PRK">Korea, Democratic People's Republic of</option>
+                                                                                                    <option value="KOR">Korea, Republic of</option>
+                                                                                                    <option value="KWT">Kuwait</option>
+                                                                                                    <option value="KGZ">Kyrgyzstan</option>
+                                                                                                    <option value="LAO">Lao People's Democratic Republic</option>
+                                                                                                    <option value="LVA">Latvia</option>
+                                                                                                    <option value="LBN">Lebanon</option>
+                                                                                                    <option value="LSO">Lesotho</option>
+                                                                                                    <option value="LBR">Liberia</option>
+                                                                                                    <option value="LBY">Libya</option>
+                                                                                                    <option value="LIE">Liechtenstein</option>
+                                                                                                    <option value="LTU">Lithuania</option>
+                                                                                                    <option value="LUX">Luxembourg</option>
+                                                                                                    <option value="MAC">Macao</option>
+                                                                                                    <option value="MKD">Macedonia (FYROM)</option>
+                                                                                                    <option value="MDG">Madagascar</option>
+                                                                                                    <option value="MWI">Malawi</option>
+                                                                                                    <option value="MYS">Malaysia</option>
+                                                                                                    <option value="MDV">Maldives</option>
+                                                                                                    <option value="MLI">Mali</option>
+                                                                                                    <option value="MLT">Malta</option>
+                                                                                                    <option value="MHL">Marshall Islands</option>
+                                                                                                    <option value="MTQ">Martinique</option>
+                                                                                                    <option value="MRT">Mauritania</option>
+                                                                                                    <option value="MUS">Mauritius</option>
+                                                                                                    <option value="MYT">Mayotte</option>
+                                                                                                    <option value="MEX">Mexico</option>
+                                                                                                    <option value="FSM">Micronesia, Federated States of</option>
+                                                                                                    <option value="MDA">Moldova, Republic of</option>
+                                                                                                    <option value="MCO">Monaco</option>
+                                                                                                    <option value="MNG">Mongolia</option>
+                                                                                                    <option value="MNE">Montenegro</option>
+                                                                                                    <option value="MSR">Montserrat</option>
+                                                                                                    <option value="MAR">Morocco</option>
+                                                                                                    <option value="MOZ">Mozambique</option>
+                                                                                                    <option value="MMR">Myanmar</option>
+                                                                                                    <option value="NAM">Namibia</option>
+                                                                                                    <option value="NRU">Nauru</option>
+                                                                                                    <option value="NPL">Nepal</option>
+                                                                                                    <option value="NLD">Netherlands</option>
+                                                                                                    <option value="NCL">New Caledonia</option>
+                                                                                                    <option value="NZL">New Zealand</option>
+                                                                                                    <option value="NIC">Nicaragua</option>
+                                                                                                    <option value="NER">Niger</option>
+                                                                                                    <option value="NGA">Nigeria</option>
+                                                                                                    <option value="NIU">Niue</option>
+                                                                                                    <option value="NFK">Norfolk Island</option>
+                                                                                                    <option value="MNP">Northern Mariana Islands</option>
+                                                                                                    <option value="NOR">Norway</option>
+                                                                                                    <option value="OMN">Oman</option>
+                                                                                                    <option value="PAK">Pakistan</option>
+                                                                                                    <option value="PLW">Palau</option>
+                                                                                                    <option value="PSE">Palestine, State of</option>
+                                                                                                    <option value="PAN">Panama</option>
+                                                                                                    <option value="PNG">Papua New Guinea</option>
+                                                                                                    <option value="PRY">Paraguay</option>
+                                                                                                    <option value="PER">Peru</option>
+                                                                                                    <option value="PHL">Philippines</option>
+                                                                                                    <option value="PCN">Pitcairn</option>
+                                                                                                    <option value="POL">Poland</option>
+                                                                                                    <option value="PRT">Portugal</option>
+                                                                                                    <option value="PRI">Puerto Rico</option>
+                                                                                                    <option value="QAT">Qatar</option>
+                                                                                                    <option value="REU">Réunion</option>
+                                                                                                    <option value="ROU">Romania</option>
+                                                                                                    <option value="RUS">Russian Federation</option>
+                                                                                                    <option value="RWA">Rwanda</option>
+                                                                                                    <option value="BLM">Saint Barthélemy</option>
+                                                                                                    <option value="SHN">Saint Helena, Ascension and Tristan da Cunha</option>
+                                                                                                    <option value="KNA">Saint Kitts and Nevis</option>
+                                                                                                    <option value="LCA">Saint Lucia</option>
+                                                                                                    <option value="MAF">Saint Martin (French part)</option>
+                                                                                                    <option value="SPM">Saint Pierre and Miquelon</option>
+                                                                                                    <option value="VCT">Saint Vincent and the Grenadines</option>
+                                                                                                    <option value="WSM">Samoa</option>
+                                                                                                    <option value="SMR">San Marino</option>
+                                                                                                    <option value="STP">Sao Tome and Principe</option>
+                                                                                                    <option value="SAU">Saudi Arabia</option>
+                                                                                                    <option value="SEN">Senegal</option>
+                                                                                                    <option value="SRB">Serbia</option>
+                                                                                                    <option value="SYC">Seychelles</option>
+                                                                                                    <option value="SLE">Sierra Leone</option>
+                                                                                                    <option value="SGP">Singapore</option>
+                                                                                                    <option value="SXM">Sint Maarten (Dutch part)</option>
+                                                                                                    <option value="SVK">Slovakia</option>
+                                                                                                    <option value="SVN">Slovenia</option>
+                                                                                                    <option value="SLB">Solomon Islands</option>
+                                                                                                    <option value="SOM">Somalia</option>
+                                                                                                    <option value="ZAF">South Africa</option>
+                                                                                                    <option value="SGS">South Georgia and the South Sandwich Islands</option>
+                                                                                                    <option value="SSD">South Sudan</option>
+                                                                                                    <option value="ESP">Spain</option>
+                                                                                                    <option value="LKA">Sri Lanka</option>
+                                                                                                    <option value="SDN">Sudan</option>
+                                                                                                    <option value="SUR">Suriname</option>
+                                                                                                    <option value="SJM">Svalbard and Jan Mayen</option>
+                                                                                                    <option value="SWZ">Swaziland</option>
+                                                                                                    <option value="SWE">Sweden</option>
+                                                                                                    <option value="CHE">Switzerland</option>
+                                                                                                    <option value="SYR">Syrian Arab Republic</option>
+                                                                                                    <option value="TWN">Taiwan, Province of China</option>
+                                                                                                    <option value="TJK">Tajikistan</option>
+                                                                                                    <option value="TZA">Tanzania, United Republic of</option>
+                                                                                                    <option value="THA">Thailand</option>
+                                                                                                    <option value="TLS">Timor-Leste</option>
+                                                                                                    <option value="TGO">Togo</option>
+                                                                                                    <option value="TKL">Tokelau</option>
+                                                                                                    <option value="TON">Tonga</option>
+                                                                                                    <option value="TTO">Trinidad &amp; Tobago</option>
+                                                                                                    <option value="TUN">Tunisia</option>
+                                                                                                    <option value="TUR">Turkey</option>
+                                                                                                    <option value="TKM">Turkmenistan</option>
+                                                                                                    <option value="TCA">Turks and Caicos Islands</option>
+                                                                                                    <option value="TUV">Tuvalu</option>
+                                                                                                    <option value="UGA">Uganda</option>
+                                                                                                    <option value="UKR">Ukraine</option>
+                                                                                                    <option value="ARE">United Arab Emirates</option>
+                                                                                                    <option value="GBR">United Kingdom</option>
+                                                                                                    <option value="USA">United States</option>
+                                                                                                    <option value="UMI">United States Minor Outlying Islands</option>
+                                                                                                    <option value="URY">Uruguay</option>
+                                                                                                    <option value="UZB">Uzbekistan</option>
+                                                                                                    <option value="VUT">Vanuatu</option>
+                                                                                                    <option value="VEN">Venezuela, Bolivarian Republic of</option>
+                                                                                                    <option value="VNM">Viet Nam</option>
+                                                                                                    <option value="VGB">Virgin Islands, British</option>
+                                                                                                    <option value="VIR">Virgin Islands, U.S.</option>
+                                                                                                    <option value="WLF">Wallis and Futuna</option>
+                                                                                                    <option value="ESH">Western Sahara</option>
+                                                                                                    <option value="YEM">Yemen</option>
+                                                                                                    <option value="ZMB">Zambia</option>
+                                                                                                    <option value="ZWE">Zimbabwe</option>
+                                                                                            </select>
+                                        <span class="field-check"></span></div>
+                                        <div class="form-group state col-xs-12 col-sm-6">
+                                            <input type="text" class="form-control state" id="state" autocomplete="address-level1" placeholder="Регион/область" value="">
+                                            <select class="form-control form-select hidden state" autocomplete="address-level1" style="display: none;">
+                                                <option value="" disabled="" selected="">Регион/область</option>
+                                                                                                    <option value="AL">Alabama</option>
+                                                                                                    <option value="AK">Alaska</option>
+                                                                                                    <option value="AS">American Samoa</option>
+                                                                                                    <option value="AZ">Arizona</option>
+                                                                                                    <option value="AR">Arkansas</option>
+                                                                                                    <option value="CA">California</option>
+                                                                                                    <option value="CO">Colorado</option>
+                                                                                                    <option value="CT">Connecticut</option>
+                                                                                                    <option value="DE">Delaware</option>
+                                                                                                    <option value="DC">District Of Columbia</option>
+                                                                                                    <option value="FM">Federated States Of Micronesia</option>
+                                                                                                    <option value="FL">Florida</option>
+                                                                                                    <option value="GA">Georgia</option>
+                                                                                                    <option value="GU">Guam</option>
+                                                                                                    <option value="HI">Hawaii</option>
+                                                                                                    <option value="ID">Idaho</option>
+                                                                                                    <option value="IL">Illinois</option>
+                                                                                                    <option value="IN">Indiana</option>
+                                                                                                    <option value="IA">Iowa</option>
+                                                                                                    <option value="KS">Kansas</option>
+                                                                                                    <option value="KY">Kentucky</option>
+                                                                                                    <option value="LA">Louisiana</option>
+                                                                                                    <option value="ME">Maine</option>
+                                                                                                    <option value="MH">Marshall Islands</option>
+                                                                                                    <option value="MD">Maryland</option>
+                                                                                                    <option value="MA">Massachusetts</option>
+                                                                                                    <option value="MI">Michigan</option>
+                                                                                                    <option value="MN">Minnesota</option>
+                                                                                                    <option value="MS">Mississippi</option>
+                                                                                                    <option value="MO">Missouri</option>
+                                                                                                    <option value="MT">Montana</option>
+                                                                                                    <option value="NE">Nebraska</option>
+                                                                                                    <option value="NV">Nevada</option>
+                                                                                                    <option value="NH">New Hampshire</option>
+                                                                                                    <option value="NJ">New Jersey</option>
+                                                                                                    <option value="NM">New Mexico</option>
+                                                                                                    <option value="NY">New York</option>
+                                                                                                    <option value="NC">North Carolina</option>
+                                                                                                    <option value="ND">North Dakota</option>
+                                                                                                    <option value="MP">Northern Mariana Islands</option>
+                                                                                                    <option value="OH">Ohio</option>
+                                                                                                    <option value="OK">Oklahoma</option>
+                                                                                                    <option value="OR">Oregon</option>
+                                                                                                    <option value="PW">Palau</option>
+                                                                                                    <option value="PA">Pennsylvania</option>
+                                                                                                    <option value="PR">Puerto Rico</option>
+                                                                                                    <option value="RI">Rhode Island</option>
+                                                                                                    <option value="SC">South Carolina</option>
+                                                                                                    <option value="SD">South Dakota</option>
+                                                                                                    <option value="TN">Tennessee</option>
+                                                                                                    <option value="TX">Texas</option>
+                                                                                                    <option value="UT">Utah</option>
+                                                                                                    <option value="VT">Vermont</option>
+                                                                                                    <option value="VI">Virgin Islands</option>
+                                                                                                    <option value="VA">Virginia</option>
+                                                                                                    <option value="WA">Washington</option>
+                                                                                                    <option value="WV">West Virginia</option>
+                                                                                                    <option value="WI">Wisconsin</option>
+                                                                                                    <option value="WY">Wyoming</option>
+                                                                                            </select>
+                                        <span class="field-check"></span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group city col-xs-12 col-sm-4">
+                                            <input type="text" required="" class="form-control" id="city" autocomplete="address-level2" placeholder="Город" value="">
+                                        <span class="field-check"></span></div>
+                                        <div class="form-group postal_code col-xs-12 col-sm-4">
+                                            <input type="text" class="form-control" id="postal_code" autocomplete="postal-code" placeholder="Postal code" value="">
+                                        <span class="field-check"></span></div>
+                                        <div class="form-group phone col-xs-12 col-sm-4">
+                                            <input type="text" class="form-control" id="phone" autocomplete="tel" placeholder="Телефон" data-validation="phone" value="">
+                                        <span class="field-check"></span></div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer ta-center">
+                            <a href="https://refactoring.guru/ru/design-patterns/memento#" class="btn btn-wide btn-info btn-next">Далее
+                                »</a>
+                            <a href="https://refactoring.guru/ru/design-patterns/memento#" class="btn btn-default btn-back">« Назад</a>
+                        </div>
+                                            </div>
+                </div>
+
+                <div class="modal-dialog flip-over-back" id="step_payment" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h2><i class="fa fa-credit-card"></i> Оплата</h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="messages" style="display: none;">
+                                <div class="alert alert-danger" role="alert">
+                                    <ul class="text"></ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-8 card-box">
+
+                                    <h4>Оплатите карточкой</h4>
+
+                                    <div class="form-group card_number">
+                                        <div class="input-icon">
+                                            <span class="field-icon"><i class="fa fa-credit-card"></i></span>
+                                            <span class="card-type"></span>
+                                            <input type="tel" required="" data-validation="card_number" class="form-control -metrika-nokeys" id="card_number" autocomplete="cc-number" placeholder="Номер платежной карты">
+                                        </div>
+                                    <span class="field-check"></span></div>
+
+                                    <div class="form-group card_expiry">
+                                        <div class="input-icon">
+                                            <span class="field-icon"><i class="fa fa-calendar"></i></span>
+                                            <input type="tel" required="" data-validation="card_expiry" class="form-control -metrika-nokeys" id="card_expiry" autocomplete="cc-exp" placeholder="MM / YY">
+                                        </div>
+                                    <span class="field-check"></span></div>
+                                    <div class="form-group card_cvc">
+                                        <div class="input-icon">
+                                            <span class="field-icon"><i class="fa fa-lock"></i></span>
+                                            <input type="tel" required="" data-validation="card_cvc" class="form-control -metrika-nokeys" id="card_cvc" autocomplete="cc-csc" placeholder="CVC" data-toggle="tooltip" data-placement="right" title="" data-original-title="3 цифры на задней стороне карточки">
+                                        </div>
+                                    <span class="field-check"></span></div>
+
+                                </div>
+                                <div class="col-xs-12 col-sm-4 paypal-box">
+                                    <h4>Или через</h4>
+
+                                    <div class="paypal">
+                                        <a href="https://refactoring.guru/ru/design-patterns/memento#" class="btn-paypal"><img src="./Снимок_files/logo_paypal_small.png" alt="PayPal Logo"></a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer ta-center">
+                            <a href="https://refactoring.guru/ru/design-patterns/memento#" class="btn btn-wide btn-info btn-next">Заплатить
+                                <span class="total">$0.00</span></a>
+                            <a href="https://refactoring.guru/ru/design-patterns/memento#" class="btn btn-default btn-back">« Назад</a>
+                        </div>
+                                            </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script src="./Снимок_files/2co.min.js.Без названия"></script>
+    <script>
+function extend() {
+    var extended = {};
+    var deep = false;
+    var i = 0;
+    var length = arguments.length;
+    if ( Object.prototype.toString.call( arguments[0] ) === '[object Boolean]' ) {
+        deep = arguments[0];
+        i++;
+    }
+    var merge = function (obj) {
+        for ( var prop in obj ) {
+            if ( Object.prototype.hasOwnProperty.call( obj, prop ) ) {
+                // If deep merge and property is an object, merge properties
+                if ( deep && Object.prototype.toString.call(obj[prop]) === '[object Object]' ) {
+                    extended[prop] = extend( true, extended[prop], obj[prop] );
+                } else {
+                    extended[prop] = obj[prop];
+                }
+            }
+        }
+    };
+    for ( ; i < length; i++ ) {
+        var obj = arguments[i];
+        merge(obj);
+    }
+    return extended;
+}
+</script>
+<script>
++function(script_defaults) {
+    for (var property in script_defaults) {
+        if (window[property] !== null && typeof window[property] === 'object') {
+            window[property] = extend(true, window[property], script_defaults[property])
+        }
+        else {
+            window[property] = script_defaults[property];
+        }
+    }
+}({"defaults":{"_token":"VVoYm9R8iFCREaUZ5QOP15vryQvXsM39SGWIAUja","checkout_return_url":"https://refactoring.guru/ru/ajax/checkout-form.js","checkout_complete_url":"https://sourcemaking.com/checkout_redirect/refactoring.guru","checkout_env":"production","checkout_seller_id":1794282,"checkout_publishable_key":"CB96BC78-6621-11E4-B752-5BCF3A5D4FFE","currency":{"code":"USD","display_format":"$%s"},"currency_format":"$%s","cart":[],"total":0,"total_display":"$0.00","upsell":{"Refactoring Course":{"sku":"Refactoring Course","list_price":50,"price":19.95,"url":"/course","image":"/images/content-public/covers/CoverHIRES-en.jpg","limit_cart_quantity":true,"price_display":"$19.95","list_price_display":"$50.00","discount":60,"discount_display":"-60%"}},"ip_country":"RUS"},"progress_texts":["Проверяю данные...","Устанавливаю безопасное соединение...","Соединяюсь с платежным шлюзом...","Отправляю данные...","Проверяю платежную информацию...","Проверяю оплату...","Обрабатываю данные...","Да, это длится дольше, чем ожидалось...","Окей, наконец всё готово...","А вот и нет, еще пару секунд...","Получаю данные..."],"has_checkout":true,"user_echo_alias":"refactoring","user_echo_host":"refactoring.userecho.com","user_echo_private_forum":2,"user_echo_public_forum":1,"user_echo_sso_token":"","locale":"ru","locale_prefix":"ru/"});
+</script>
+</body></html>
