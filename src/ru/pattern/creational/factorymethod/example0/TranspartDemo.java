@@ -1,14 +1,14 @@
-package ru.pattern.creational.factorymethod;
+package ru.pattern.creational.factorymethod.example0;
 
 /**
  * Created by Евгений on 04.03.2017.
  */
 public class TranspartDemo {
-    public static void main(String[] args) {
-        Delivery maker = getMaker(3);
-        Transport tr = maker.createDelivery();
 
-       tr.descriptionDelivery();
+    public static void main(String[] args) {
+        Delivery maker = getMaker(2);
+        Transport tr = maker.createDelivery();
+        tr.descriptionDelivery();
     }
     
     //// TODO: 04.03.2017  getMaker
@@ -26,7 +26,6 @@ public class TranspartDemo {
 }
 
 abstract class Delivery {
-    Transport transport;
     abstract Transport createDelivery();
 }
 

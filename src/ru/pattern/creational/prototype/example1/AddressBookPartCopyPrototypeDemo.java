@@ -6,7 +6,7 @@ package ru.pattern.creational.prototype.example1;
 public class AddressBookPartCopyPrototypeDemo {
     public static void main(String[] args) {
         AddressBookPartCopyPrototype note = new AddressBookPartCopyPrototype("Ivanov Ivan Ivanovich","Yaroslavl",25,"+7 222-222-3323");
-        AddressBookPartCopyPrototype noteCopy =  note.copy();
+        AddressBookPartCopyPrototype noteCopy = note.copy();
         noteCopy.setOld(34);
         System.out.println(note);
         System.out.println(noteCopy);

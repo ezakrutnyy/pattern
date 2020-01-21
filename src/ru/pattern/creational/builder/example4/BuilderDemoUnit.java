@@ -8,14 +8,14 @@ public class BuilderDemoUnit {
 
         Director director = new Director();
 
-        director.setBuilder(new RusUniqueUnitBuilder());
-        UniqueUnit rusUniqueUnit = director.build();
-
         director.setBuilder(new FrUniqueUnitBuilder());
-        UniqueUnit frCavalry = director.build();
+        UniqueUnit rusUniqueUnit = director.build();
+//
+//        director.setBuilder(new FrUniqueUnitBuilder());
+//        UniqueUnit frCavalry = director.build();
 
         System.out.println(rusUniqueUnit);
-        System.out.println(frCavalry);
+//        System.out.println(frCavalry);
 
     }
 }
@@ -36,7 +36,7 @@ abstract class UniqueUnitBuilder {
     }
 }
 
-class RusUniqueUnitBuilder extends  UniqueUnitBuilder{
+class RusUniqueUnitBuilder extends  UniqueUnitBuilder {
 
     @Override
     void buildName() {
@@ -55,7 +55,7 @@ class RusUniqueUnitBuilder extends  UniqueUnitBuilder{
 }
 
 
-class FrUniqueUnitBuilder extends  UniqueUnitBuilder{
+class FrUniqueUnitBuilder extends  UniqueUnitBuilder {
 
     @Override
     void buildName() {
@@ -72,9 +72,6 @@ class FrUniqueUnitBuilder extends  UniqueUnitBuilder{
         unit.setPlace(PlaceEnum.FRANCE);
     }
 }
-
-
-
 
 class UniqueUnit {
     private String name;

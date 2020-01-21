@@ -6,29 +6,26 @@ import java.math.BigDecimal;
 //Клиентский
 public class BuyCar {
     public static void main(String[] args) {
-        //CarI car = new BodyCar();
-        //CarI car = new DecorateClimatControl(new BodyCar());
-        //CarI car = new DecorateNavigator(new BodyCar());
-        CarI car = new DecorateNavigator(new DecorateClimatControl(new BodyCar()));
+        Car car = new DecorateClimatControl(new DecorateNavigator(new BodyCar()));
         System.out.println(car.getPrice());
     }
 }
 
 
-interface CarI {
+interface Car {
     BigDecimal getPrice();
 }
 
-class BodyCar implements CarI{
+class BodyCar implements Car {
     @Override
     public BigDecimal getPrice() {
         return new BigDecimal(450000).setScale(2,BigDecimal.ROUND_HALF_UP);
     }
 }
 
- abstract class Decorate implements  CarI {
-    private CarI component;
-    public Decorate (CarI c){
+ abstract class Decorate implements Car {
+    private Car component;
+    public Decorate (Car c){
         component = c;
     }
 
@@ -40,7 +37,7 @@ class BodyCar implements CarI{
 
 class DecorateNavigator extends Decorate {
 
-    public DecorateNavigator(CarI c) {
+    public DecorateNavigator(Car c) {
         super(c);
     }
 
@@ -51,7 +48,7 @@ class DecorateNavigator extends Decorate {
 
 class DecorateClimatControl extends Decorate {
 
-    public DecorateClimatControl(CarI c) {
+    public DecorateClimatControl(Car c) {
         super(c);
     }
 

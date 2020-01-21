@@ -14,7 +14,7 @@ public class AddressBookFullCopyPrototypeDemo {
     }
 }
 
-class AddressBookFullCopyPrototype implements  Cloneable{
+class AddressBookFullCopyPrototype implements  Cloneable {
     private String name;
     private String city;
     private int old;

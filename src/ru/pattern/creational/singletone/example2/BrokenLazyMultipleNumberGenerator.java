@@ -11,11 +11,9 @@ public class BrokenLazyMultipleNumberGenerator {
     public static BrokenLazyMultipleNumberGenerator getInstance() {
 
         if (INSTANCE == null) {
-            synchronized (BrokenLazyMultipleNumberGenerator.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new BrokenLazyMultipleNumberGenerator();
                 }
-            }
         }
         return INSTANCE;
     }

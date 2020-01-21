@@ -25,6 +25,7 @@ class Run implements  Runnable {
         MySingletone.getInstance();
     }
 }
+
 class MySingletone {
     private static int count = 0;
     private static MySingletone instance;

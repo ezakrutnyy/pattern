@@ -9,19 +9,19 @@ import java.util.List;
 public class CreateUnitFactoryMethod {
     public static void main(String[] args) throws Exception {
 
-        List<TypeUnit> units = new ArrayList<TypeUnit>();
+        List<TypeUnit> units = new ArrayList<>();
 
         FactoryMaker maker = getFactoryMaker(UnitTypes.CAVALRY);
-        units.add( maker.createUnit());
+        units.add(maker.createUnit());
 
         maker = getFactoryMaker(UnitTypes.ARCHER);
-        units.add( maker.createUnit());
-        units.add( maker.createUnit());
+        units.add(maker.createUnit());
+        units.add(maker.createUnit());
 
         maker = getFactoryMaker(UnitTypes.INFANTRY);
-        units.add( maker.createUnit());
-        units.add( maker.createUnit());
-        units.add( maker.createUnit());
+        units.add(maker.createUnit());
+        units.add(maker.createUnit());
+        units.add(maker.createUnit());
         for(TypeUnit unit : units) {
             unit.showUnit();
         }

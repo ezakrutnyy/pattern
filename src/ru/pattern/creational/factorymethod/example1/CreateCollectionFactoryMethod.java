@@ -1,7 +1,5 @@
 package ru.pattern.creational.factorymethod.example1;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -22,7 +20,6 @@ abstract class CollectionMaker {
 
     void createCollection() {
         collection = getTypeCollection();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Scanner console = new Scanner(System.in);
         while(console.hasNext()) {
             String s = console.nextLine();
@@ -42,7 +39,7 @@ class ArrayListMaker extends CollectionMaker {
 
     @Override
     Collection<String> getTypeCollection() {
-       return  new ArrayList<String>();
+       return  new ArrayList<>();
     }
 }
 
@@ -50,7 +47,7 @@ class HashSetMaker extends CollectionMaker {
 
     @Override
     Collection<String> getTypeCollection() {
-        return  new HashSet<String>();
+        return  new HashSet<>();
     }
 }
 
@@ -58,6 +55,6 @@ class TreeSetMaker extends CollectionMaker {
 
     @Override
     Collection<String> getTypeCollection() {
-        return  new TreeSet<String>();
+        return  new TreeSet<>();
     }
 }

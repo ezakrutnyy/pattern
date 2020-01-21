@@ -43,7 +43,7 @@ enum PlaceEnum {
 
 public class CreateLeaderAbstractFactory {
     public static void main(String[] args) {
-        String nation = "Russia";
+        String nation = "India";
         CreateUnitAbstractFactory factory = CreateUnitAbstractFactory.choiseFactory(nation);
         Leader leader = factory.createLeader();
         Place place = factory.createPlace();

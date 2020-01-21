@@ -7,8 +7,8 @@ public class AdapterPatternUnitFightDemo {
     public static void main(String[] args) {
         CommandUnit command;
         //command = new CommandUnit(new SavageAction());
-        command = new CommandUnit(new AdapterMessionerAction());
-        //command = new CommandUnit(new AdapterMessionerActionObject(new MessionerUnit()));
+//        command = new CommandUnit(new AdapterMessionerAction());
+        command = new CommandUnit(new AdapterMessionerActionObject(new MessionerUnit()));
         command.move();
         command.fight();
     }

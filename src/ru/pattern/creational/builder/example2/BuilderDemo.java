@@ -6,7 +6,7 @@ package ru.pattern.creational.builder.example2;
 public class BuilderDemo {
     public static void main(String[] args) {
 
-        CivilEngineer engineer = new CivilEngineer(new IglooHouseBuilder());
+        CivilEngineer engineer = new CivilEngineer(new TipiHouseBuilder());
         engineer.constructHouse();
         House house = engineer.getHouse();
         System.out.println("Builder constructed: " + house);
